@@ -1,122 +1,107 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './Components/ProtectedRoute';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
-import BookList from './Components/BookList';
-import FilterBar from './Components/FilterBar';
+import { Home } from './Components/Home';
+import { Login, SignUp } from './Components/Auth';
+import { AdminBooks, AdminSubscribers, RemoveSubscribers, FineCollections } from './Components/Admin';
+import { Wallet, BorrowHistory } from './Components/Subscriber';
+import RoleRoute from './Components/RoleRoute';
+import UserInfo from './Components/Debug/UserInfo';
 
 function App() {
-  const [filteredBooks, setFilteredBooks] = useState([]);
-  const [selectedGenre, setSelectedGenre] = useState('all');
-  const [loading, setLoading] = useState(true);
-  const [genres,setGenres] = useState([]);
-  const [page, setPage] = useState(0);
-  const [size] = useState(9);
-  const [totalPages, setTotalPages] = useState(0);
-  const [totalElements, setTotalElements] = useState(0);
-
-  // Fetch paginated books whenever page/size/genre changes
-  useEffect(() => {
-    fetchBooks(page, size, selectedGenre);
-  }, [page, size, selectedGenre]);
-
-  // Fetch genres once
-  useEffect(() => {
-    fetchGenres();
-  }, []);
-
-
-  const fetchGenres = async () => {
-    const response = await fetch("http://localhost:8080/api/books/genres");
-    const data = await response.json();
-    setGenres(data);
-  }
-
-  const fetchBooks = async (pageParam = 0, sizeParam = 9, genreParam = 'all') => {
-    try {
-      const isAll = !genreParam || genreParam === 'all';
-      const url = isAll
-        ? `http://localhost:8080/api/books?page=${pageParam}&size=${sizeParam}`
-        : `http://localhost:8080/api/books/genre?genre=${encodeURIComponent(genreParam)}&page=${pageParam}&size=${sizeParam}`;
-      const response = await fetch(url);
-      const data = await response.json();
-      const booksPage = Array.isArray(data.content) ? data : { content: [], totalPages: 0, totalElements: 0 };
-      setFilteredBooks(booksPage.content);
-      setTotalPages(booksPage.totalPages || 0);
-      setTotalElements(booksPage.totalElements || 0);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching books:', error);
-      // Fallback data for demo purposes
-      const demo = [
-        { id: 1, title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', genre: 'fiction', year: 1925, cover: 'https://via.placeholder.com/150x200?text=The+Great+Gatsby' },
-        { id: 2, title: 'To Kill a Mockingbird', author: 'Harper Lee', genre: 'fiction', year: 1960, cover: 'https://via.placeholder.com/150x200?text=To+Kill+a+Mockingbird' },
-        { id: 3, title: '1984', author: 'George Orwell', genre: 'sci-fi', year: 1949, cover: 'https://via.placeholder.com/150x200?text=1984' },
-        { id: 4, title: 'Pride and Prejudice', author: 'Jane Austen', genre: 'romance', year: 1813, cover: 'https://via.placeholder.com/150x200?text=Pride+and+Prejudice' },
-        { id: 5, title: 'The Hobbit', author: 'J.R.R. Tolkien', genre: 'fiction', year: 1937, cover: 'https://via.placeholder.com/150x200?text=The+Hobbit' },
-        { id: 6, title: 'Sherlock Holmes', author: 'Arthur Conan Doyle', genre: 'mystery', year: 1887, cover: 'https://via.placeholder.com/150x200?text=Sherlock+Holmes' }
-      ];
-      setFilteredBooks(demo);
-      setTotalPages(1);
-      setTotalElements(6);
-      setLoading(false);
-    }
-  };
-
-  const goToPrevPage = () => setPage(prev => Math.max(prev - 1, 0));
-  const goToNextPage = () => setPage(prev => Math.min(prev + 1, Math.max(totalPages - 1, 0)));
-
-  const handleGenreChange = (genre) => {
-    setSelectedGenre(genre || 'all');
-    setPage(0);
-  };
-
   return (
-    <div className="App">
-      <Header />
-      <main className="main-content">
-        <FilterBar 
-          genres={genres} 
-          selectedGenre={selectedGenre} 
-          onGenreChange={handleGenreChange} 
-        />
-        <BookList
-          books={filteredBooks}
-          loading={loading}
-          onBorrow={async (book) => {
-            try {
-              await fetch(`http://localhost:8080/api/books/${book.id}/borrow`, { method: 'POST' });
-              fetchBooks(page, size, selectedGenre);
-            } catch (e) {
-              console.error('Borrow failed', e);
-            }
-          }}
-          onReturn={async (book) => {
-            try {
-              await fetch(`http://localhost:8080/api/books/${book.id}/return`, { method: 'POST' });
-              fetchBooks(page, size, selectedGenre);
-            } catch (e) {
-              console.error('Return failed', e);
-            }
-          }}
-        />
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
-          <button onClick={goToPrevPage} disabled={page <= 0} style={{ padding: '0.6rem 1.2rem', borderRadius: 8, border: '1px solid #ccd', background: page <= 0 ? '#eee' : '#667eea', color: page <= 0 ? '#888' : '#fff', cursor: page <= 0 ? 'not-allowed' : 'pointer' }}>Prev</button>
-          <div style={{ color: '#555', flex: 1, textAlign: 'center' }}>
-            Page {totalPages === 0 ? 0 : page + 1} of {totalPages}
-            {totalElements > 0 && (
-              <span style={{ marginLeft: 12, color: '#777' }}>
-                • {Math.min(page * size + 1, totalElements)}-
-                {Math.min((page + 1) * size, totalElements)} of {totalElements} items
-              </span>
-            )}
-          </div>
-          <button onClick={goToNextPage} disabled={totalPages === 0 || page >= totalPages - 1} style={{ padding: '0.6rem 1.2rem', borderRadius: 8, border: '1px solid #ccd', background: (totalPages === 0 || page >= totalPages - 1) ? '#eee' : '#667eea', color: (totalPages === 0 || page >= totalPages - 1) ? '#888' : '#fff', cursor: (totalPages === 0 || page >= totalPages - 1) ? 'not-allowed' : 'pointer' }}>Next</button>
+    <AuthProvider>
+      <Router>
+        <div className="App">
+          <UserInfo />
+          <Header />
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route 
+              path="/" 
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Admin Routes */}
+            <Route 
+              path="/admin/books" 
+              element={
+                <ProtectedRoute>
+                  <RoleRoute allowedRole="ADMIN">
+                    <AdminBooks />
+                  </RoleRoute>
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin/subscribers" 
+              element={
+                <ProtectedRoute>
+                  <RoleRoute allowedRole="ADMIN">
+                    <AdminSubscribers />
+                  </RoleRoute>
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin/remove-subscribers" 
+              element={
+                <ProtectedRoute>
+                  <RoleRoute allowedRole="ADMIN">
+                    <RemoveSubscribers />
+                  </RoleRoute>
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin/fines" 
+              element={
+                <ProtectedRoute>
+                  <RoleRoute allowedRole="ADMIN">
+                    <FineCollections />
+                  </RoleRoute>
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Subscriber Routes */}
+            <Route 
+              path="/wallet" 
+              element={
+                <ProtectedRoute>
+                  <RoleRoute allowedRole="SUBSCRIBER">
+                    <Wallet />
+                  </RoleRoute>
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/borrow-history" 
+              element={
+                <ProtectedRoute>
+                  <RoleRoute allowedRole="SUBSCRIBER">
+                    <BorrowHistory />
+                  </RoleRoute>
+                </ProtectedRoute>
+              } 
+            />
+            
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+          <Footer />
         </div>
-      </main>
-      <Footer />
-    </div>
+      </Router>
+    </AuthProvider>
   );
 }
 
