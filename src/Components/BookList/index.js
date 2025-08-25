@@ -1,7 +1,9 @@
 import React from 'react';
 import './BookList.css';
+import { useAuth } from '../../contexts/AuthContext';
 
 const BookList = ({ books, loading, onBorrow, onReturn }) => {
+  const { isAdmin } = useAuth();
   // Ensure books is always an array
   const booksArray = Array.isArray(books) ? books : [];
   
@@ -66,13 +68,14 @@ const BookList = ({ books, loading, onBorrow, onReturn }) => {
                   <button
                     className="book-btn borrow"
                     onClick={() => onBorrow && onBorrow(book)}
-                    disabled={available <= 0}
+                    disabled={isAdmin || available <= 0}
                   >
                     Borrow
                   </button>
                   <button
                     className="book-btn return"
                     onClick={() => onReturn && onReturn(book)}
+                    disabled={isAdmin}
                   >
                     Return
                   </button>
