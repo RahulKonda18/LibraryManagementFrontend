@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import apiService from '../../services/apiService';
 import './Admin.css';
 
 const AdminBooks = () => {
@@ -7,7 +7,6 @@ const AdminBooks = () => {
   const [loading, setLoading] = useState(true);
   const [editingBook, setEditingBook] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const { getAuthHeaders } = useAuth();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -19,17 +18,14 @@ const AdminBooks = () => {
 
   const fetchBooks = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/books?size=100', {
-        headers: getAuthHeaders()
-      });
-      const data = await response.json();
+      const data = await apiService.getBooks(0, 100);
       setBooks(data.content || []);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching books:', error);
       setLoading(false);
     }
-  }, [getAuthHeaders]);
+  }, []);
 
   useEffect(() => {
     fetchBooks();
@@ -45,23 +41,15 @@ const AdminBooks = () => {
   const handleAddBook = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/api/books', {
-        method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({
-          ...formData,
-          publishedYear: parseInt(formData.publishedYear),
-          copies: parseInt(formData.copies)
-        })
+      await apiService.addBook({
+        ...formData,
+        publishedYear: parseInt(formData.publishedYear),
+        copies: parseInt(formData.copies)
       });
-
-      if (response.ok) {
-        setFormData({ title: '', author: '', publishedYear: '', genre: '', copies: '' });
-        setShowAddForm(false);
-        fetchBooks();
-      } else {
-        console.error('Failed to add book');
-      }
+      
+      setFormData({ title: '', author: '', publishedYear: '', genre: '', copies: '' });
+      setShowAddForm(false);
+      fetchBooks();
     } catch (error) {
       console.error('Error adding book:', error);
     }
@@ -70,23 +58,15 @@ const AdminBooks = () => {
   const handleUpdateBook = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:8080/api/books/${editingBook.id}`, {
-        method: 'PUT',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({
-          ...formData,
-          publishedYear: parseInt(formData.publishedYear),
-          copies: parseInt(formData.copies)
-        })
+      await apiService.updateBook(editingBook.id, {
+        ...formData,
+        publishedYear: parseInt(formData.publishedYear),
+        copies: parseInt(formData.copies)
       });
-
-      if (response.ok) {
-        setEditingBook(null);
-        setFormData({ title: '', author: '', publishedYear: '', genre: '', copies: '' });
-        fetchBooks();
-      } else {
-        console.error('Failed to update book');
-      }
+      
+      setEditingBook(null);
+      setFormData({ title: '', author: '', publishedYear: '', genre: '', copies: '' });
+      fetchBooks();
     } catch (error) {
       console.error('Error updating book:', error);
     }
@@ -95,16 +75,8 @@ const AdminBooks = () => {
   const handleDeleteBook = async (bookId) => {
     if (window.confirm('Are you sure you want to delete this book?')) {
       try {
-        const response = await fetch(`http://localhost:8080/api/books/${bookId}`, {
-          method: 'DELETE',
-          headers: getAuthHeaders()
-        });
-
-        if (response.ok) {
-          fetchBooks();
-        } else {
-          console.error('Failed to delete book');
-        }
+        await apiService.deleteBook(bookId);
+        fetchBooks();
       } catch (error) {
         console.error('Error deleting book:', error);
       }

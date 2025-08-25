@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import apiService from '../../services/apiService';
 import './Admin.css';
 
 const AdminSubscribers = () => {
   const [subscribers, setSubscribers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
-  const { getAuthHeaders } = useAuth();
 
   const [formData, setFormData] = useState({
     username: '',
@@ -17,17 +16,14 @@ const AdminSubscribers = () => {
 
   const fetchSubscribers = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/admin/subscribers', {
-        headers: getAuthHeaders()
-      });
-      const data = await response.json();
+      const data = await apiService.getAdminSubscribers();
       setSubscribers(data || []);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching subscribers:', error);
       setLoading(false);
     }
-  }, [getAuthHeaders]);
+  }, []);
 
   useEffect(() => {
     fetchSubscribers();
@@ -43,24 +39,15 @@ const AdminSubscribers = () => {
   const handleAddSubscriber = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/api/users/register', {
-        method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({
-          ...formData,
-          role: 'SUBSCRIBER'
-        })
+      await apiService.register({
+        ...formData,
+        role: 'SUBSCRIBER'
       });
-
-      if (response.ok) {
-        setFormData({ username: '', password: '', name: '', email: '' });
-        setShowAddForm(false);
-        fetchSubscribers();
-        alert('Subscriber added successfully!');
-      } else {
-        const errorData = await response.json();
-        alert(`Failed to add subscriber: ${errorData.message || 'Unknown error'}`);
-      }
+      
+      setFormData({ username: '', password: '', name: '', email: '' });
+      setShowAddForm(false);
+      fetchSubscribers();
+      alert('Subscriber added successfully!');
     } catch (error) {
       console.error('Error adding subscriber:', error);
       alert('Error adding subscriber');

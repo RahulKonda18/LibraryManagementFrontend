@@ -1,25 +1,21 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import apiService from '../../services/apiService';
 import './Admin.css';
 
 const RemoveSubscribers = () => {
   const [subscribers, setSubscribers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { getAuthHeaders } = useAuth();
 
   const fetchSubscribers = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/admin/subscribers', {
-        headers: getAuthHeaders()
-      });
-      const data = await response.json();
+      const data = await apiService.getAdminSubscribers();
       setSubscribers(data || []);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching subscribers:', error);
       setLoading(false);
     }
-  }, [getAuthHeaders]);
+  }, []);
 
   useEffect(() => {
     fetchSubscribers();
@@ -28,17 +24,9 @@ const RemoveSubscribers = () => {
   const handleDeleteSubscriber = async (subscriberId, subscriberName) => {
     if (window.confirm(`Are you sure you want to delete subscriber "${subscriberName}"? This action cannot be undone.`)) {
       try {
-        const response = await fetch(`http://localhost:8080/api/users/${subscriberId}`, {
-          method: 'DELETE',
-          headers: getAuthHeaders()
-        });
-
-        if (response.ok) {
-          alert('Subscriber deleted successfully!');
-          fetchSubscribers();
-        } else {
-          alert('Failed to delete subscriber');
-        }
+        await apiService.deleteUser(subscriberId);
+        alert('Subscriber deleted successfully!');
+        fetchSubscribers();
       } catch (error) {
         console.error('Error deleting subscriber:', error);
         alert('Error deleting subscriber');

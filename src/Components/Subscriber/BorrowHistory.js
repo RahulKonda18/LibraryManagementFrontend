@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import apiService from '../../services/apiService';
 import './Subscriber.css';
 
 const BorrowHistory = () => {
@@ -7,31 +8,22 @@ const BorrowHistory = () => {
   const [activeBorrows, setActiveBorrows] = useState([]);
   const [unpaidFines, setUnpaidFines] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { user, getAuthHeaders } = useAuth();
+  const { user } = useAuth();
 
   const fetchBorrowData = useCallback(async () => {
     if (!user?.id) return;
 
     try {
       // Fetch complete borrow history
-      const historyResponse = await fetch(`http://localhost:8080/api/borrows/${user.id}/history`, {
-        headers: getAuthHeaders()
-      });
-      const historyData = await historyResponse.json();
+      const historyData = await apiService.getBorrowHistory(user.id);
       setBorrowHistory(historyData || []);
 
       // Fetch active borrows
-      const activeResponse = await fetch(`http://localhost:8080/api/borrows/${user.id}/active`, {
-        headers: getAuthHeaders()
-      });
-      const activeData = await activeResponse.json();
+      const activeData = await apiService.getActiveBorrows(user.id);
       setActiveBorrows(activeData || []);
 
       // Fetch unpaid fines
-      const finesResponse = await fetch(`http://localhost:8080/api/borrows/${user.id}/unpaid-fines`, {
-        headers: getAuthHeaders()
-      });
-      const finesData = await finesResponse.json();
+      const finesData = await apiService.getUnpaidFines(user.id);
       setUnpaidFines(finesData || []);
 
       setLoading(false);
@@ -39,7 +31,7 @@ const BorrowHistory = () => {
       console.error('Error fetching borrow data:', error);
       setLoading(false);
     }
-  }, [user?.id, getAuthHeaders]);
+  }, [user?.id]);
 
   useEffect(() => {
     fetchBorrowData();
@@ -63,22 +55,24 @@ const BorrowHistory = () => {
     }
   };
 
-  const handlePayFine = async (borrowRecordId) => {
-    try {
-      const response = await fetch(`http://localhost:8080/api/borrows/${user.id}/fines/${borrowRecordId}/pay`, {
-        method: 'POST',
-        headers: getAuthHeaders()
-      });
+  const handlePayFine = async (borrowRecordId, fineAmount) => {
+    // Only allow paying fines if there's actually a fine amount
+    if (!fineAmount || fineAmount <= 0) {
+      alert('No fine amount to pay for this record.');
+      return;
+    }
 
-      if (response.ok) {
-        alert('Fine paid successfully!');
-        fetchBorrowData();
-      } else {
-        alert('Failed to pay fine. Please check your wallet balance.');
-      }
+    if (!window.confirm(`Are you sure you want to pay ₹${fineAmount} fine?`)) {
+      return;
+    }
+
+    try {
+      await apiService.payFine(user.id, borrowRecordId);
+      alert('Fine paid successfully!');
+      fetchBorrowData();
     } catch (error) {
       console.error('Error paying fine:', error);
-      alert('Error paying fine');
+      alert(`Error paying fine: ${error.message || 'Unknown error'}`);
     }
   };
 
@@ -103,7 +97,7 @@ const BorrowHistory = () => {
         </div>
         <div className="summary-card">
           <h3>Unpaid Fines</h3>
-          <div className="count">{unpaidFines.length}</div>
+          <div className="count">{unpaidFines.filter(fine => fine.fineAmount > 0).length}</div>
         </div>
       </div>
 
@@ -134,7 +128,7 @@ const BorrowHistory = () => {
           </div>
         )}
 
-        {unpaidFines.length > 0 && (
+        {unpaidFines.filter(fine => fine.fineAmount > 0).length > 0 && (
           <div className="borrow-section">
             <h3>Unpaid Fines</h3>
             <table className="subscriber-table">
@@ -148,22 +142,24 @@ const BorrowHistory = () => {
                 </tr>
               </thead>
               <tbody>
-                {unpaidFines.map(fine => (
-                  <tr key={fine.id}>
-                    <td>{fine.book?.title}</td>
-                    <td>{formatDate(fine.borrowDate)}</td>
-                    <td>{fine.returnDate ? formatDate(fine.returnDate) : '-'}</td>
-                    <td>₹{fine.fineAmount || 0}</td>
-                    <td>
-                      <button 
-                        className="subscriber-button small"
-                        onClick={() => handlePayFine(fine.id)}
-                      >
-                        Pay Fine
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {unpaidFines
+                  .filter(fine => fine.fineAmount > 0)
+                  .map(fine => (
+                    <tr key={fine.id}>
+                      <td>{fine.book?.title}</td>
+                      <td>{formatDate(fine.borrowDate)}</td>
+                      <td>{fine.returnDate ? formatDate(fine.returnDate) : '-'}</td>
+                      <td>₹{fine.fineAmount || 0}</td>
+                      <td>
+                        <button 
+                          className="subscriber-button small"
+                          onClick={() => handlePayFine(fine.id, fine.fineAmount)}
+                        >
+                          Pay Fine
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>

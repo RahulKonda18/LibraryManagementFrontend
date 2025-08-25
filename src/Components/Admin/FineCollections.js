@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import apiService from '../../services/apiService';
 import './Admin.css';
 
 const FineCollections = () => {
@@ -7,29 +7,19 @@ const FineCollections = () => {
   const [unpaidFines, setUnpaidFines] = useState([]);
   const [activeBorrows, setActiveBorrows] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { getAuthHeaders } = useAuth();
 
   const fetchFineData = useCallback(async () => {
     try {
       // Fetch total fines collected
-      const totalFinesResponse = await fetch('http://localhost:8080/api/admin/total-fines', {
-        headers: getAuthHeaders()
-      });
-      const totalFinesData = await totalFinesResponse.json();
+      const totalFinesData = await apiService.getAdminTotalFines();
       setTotalFines(totalFinesData || 0);
 
       // Fetch unpaid fines
-      const unpaidFinesResponse = await fetch('http://localhost:8080/api/admin/unpaid-fines', {
-        headers: getAuthHeaders()
-      });
-      const unpaidFinesData = await unpaidFinesResponse.json();
+      const unpaidFinesData = await apiService.getAdminUnpaidFines();
       setUnpaidFines(unpaidFinesData || []);
 
       // Fetch active borrows
-      const activeBorrowsResponse = await fetch('http://localhost:8080/api/admin/active-borrows', {
-        headers: getAuthHeaders()
-      });
-      const activeBorrowsData = await activeBorrowsResponse.json();
+      const activeBorrowsData = await apiService.getAdminActiveBorrows();
       setActiveBorrows(activeBorrowsData || []);
 
       setLoading(false);
@@ -37,7 +27,7 @@ const FineCollections = () => {
       console.error('Error fetching fine data:', error);
       setLoading(false);
     }
-  }, [getAuthHeaders]);
+  }, []);
 
   useEffect(() => {
     fetchFineData();

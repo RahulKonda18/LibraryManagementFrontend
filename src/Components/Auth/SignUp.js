@@ -59,12 +59,17 @@ const SignUp = () => {
       return;
     }
 
-    const result = await signup(formData.name, formData.username, formData.email, formData.password);
-    
-    if (result.success) {
-      navigate('/');
-    } else {
-      setError(result.error || 'Signup failed. Please try again.');
+    try {
+      const result = await signup(formData.name, formData.username, formData.email, formData.password);
+      
+      if (result.success) {
+        // Registration successful, redirect to login
+        navigate('/login');
+      } else {
+        setError(result.error || 'Registration failed. Please try again.');
+      }
+    } catch (error) {
+      setError('An unexpected error occurred. Please try again.');
     }
     
     setLoading(false);

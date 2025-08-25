@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
@@ -11,14 +10,14 @@ import { Login, SignUp } from './Components/Auth/index';
 import { AdminBooks, AdminSubscribers, RemoveSubscribers, FineCollections } from './Components/Admin/index';
 import { Wallet, BorrowHistory } from './Components/Subscriber';
 import RoleRoute from './Components/RoleRoute';
-import UserInfo from './Components/Debug/UserInfo';
+// import UserInfo from './Components/Debug/UserInfo';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <div className="App">
-          <UserInfo />
+          {/* <UserInfo /> */}
           <Header />
           <Routes>
             <Route path="/login" element={<Login />} />

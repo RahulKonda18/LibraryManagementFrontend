@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import BookList from '../BookList';
 import FilterBar from '../FilterBar';
 import { useAuth } from '../../contexts/AuthContext';
+import apiService from '../../services/apiService';
 
 const Home = () => {
   const [filteredBooks, setFilteredBooks] = useState([]);
@@ -12,36 +13,28 @@ const Home = () => {
   const [size] = useState(9);
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
-  const { getAuthHeaders, user } = useAuth();
+  const { user } = useAuth();
 
   const fetchGenres = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/books/genres", {
-        headers: getAuthHeaders()
-      });
-      const data = await response.json();
+      const data = await apiService.getGenres();
       setGenres(data);
     } catch (error) {
       console.error('Error fetching genres:', error);
     }
-  }, [getAuthHeaders]);
+  }, []);
 
   const fetchBooks = useCallback(async (pageParam = 0, sizeParam = 9, genreParam = 'all') => {
     try {
       const isAll = !genreParam || genreParam === 'all';
-      const url = isAll
-        ? `http://localhost:8080/api/books?page=${pageParam}&size=${sizeParam}`
-        : `http://localhost:8080/api/books/genre?genre=${encodeURIComponent(genreParam)}&page=${pageParam}&size=${sizeParam}`;
+      let data;
       
-      const response = await fetch(url, {
-        headers: getAuthHeaders()
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch books');
+      if (isAll) {
+        data = await apiService.getBooks(pageParam, sizeParam);
+      } else {
+        data = await apiService.getBooksByGenre(genreParam, pageParam, sizeParam);
       }
       
-      const data = await response.json();
       const booksPage = Array.isArray(data.content) ? data : { content: [], totalPages: 0, totalElements: 0 };
       setFilteredBooks(booksPage.content);
       setTotalPages(booksPage.totalPages || 0);
@@ -63,7 +56,7 @@ const Home = () => {
       setTotalElements(6);
       setLoading(false);
     }
-  }, [getAuthHeaders]);
+  }, []);
 
   // Fetch paginated books whenever page/size/genre changes
   useEffect(() => {
@@ -85,35 +78,19 @@ const Home = () => {
 
   const handleBorrow = async (book) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/borrows/${user.id}/books/${book.id}/borrow`, {
-        method: 'POST',
-        headers: getAuthHeaders()
-      });
-      
-      if (response.ok) {
-        fetchBooks(page, size, selectedGenre);
-      } else {
-        console.error('Borrow failed');
-      }
-    } catch (e) {
-      console.error('Borrow failed', e);
+      await apiService.borrowBookWithUser(user.id, book.id);
+      fetchBooks(page, size, selectedGenre);
+    } catch (error) {
+      console.error('Borrow failed', error);
     }
   };
 
   const handleReturn = async (book) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/borrows/${user.id}/books/${book.id}/return`, {
-        method: 'POST',
-        headers: getAuthHeaders()
-      });
-      
-      if (response.ok) {
-        fetchBooks(page, size, selectedGenre);
-      } else {
-        console.error('Return failed');
-      }
-    } catch (e) {
-      console.error('Return failed', e);
+      await apiService.returnBookWithUser(user.id, book.id);
+      fetchBooks(page, size, selectedGenre);
+    } catch (error) {
+      console.error('Return failed', error);
     }
   };
 

@@ -32,12 +32,16 @@ const Login = () => {
       return;
     }
 
-    const result = await login(formData.username, formData.password);
-    
-    if (result.success) {
-      navigate('/');
-    } else {
-      setError(result.error || 'Login failed. Please try again.');
+    try {
+      const result = await login(formData.username, formData.password);
+      
+      if (result.success) {
+        navigate('/');
+      } else {
+        setError(result.error || 'Login failed. Please check your credentials.');
+      }
+    } catch (error) {
+      setError('An unexpected error occurred. Please try again.');
     }
     
     setLoading(false);

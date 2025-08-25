@@ -3,9 +3,14 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 const RoleRoute = ({ children, allowedRole }) => {
-  const { user } = useAuth();
+  const { isAdmin, isSubscriber } = useAuth();
   
-  if (user?.role !== allowedRole) {
+  // Check if user has the required role
+  const hasRequiredRole = 
+    (allowedRole === 'ADMIN' && isAdmin) || 
+    (allowedRole === 'SUBSCRIBER' && isSubscriber);
+  
+  if (!hasRequiredRole) {
     return <Navigate to="/" replace />;
   }
   

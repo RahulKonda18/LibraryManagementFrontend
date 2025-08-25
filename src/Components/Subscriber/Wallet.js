@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import apiService from '../../services/apiService';
 import './Subscriber.css';
 
 const Wallet = () => {
@@ -8,24 +9,18 @@ const Wallet = () => {
   const [loading, setLoading] = useState(true);
   const [showAddMoney, setShowAddMoney] = useState(false);
   const [amount, setAmount] = useState('');
-  const { user, getAuthHeaders } = useAuth();
+  const { user } = useAuth();
 
   const fetchWalletData = useCallback(async () => {
     if (!user?.id) return;
 
     try {
       // Fetch wallet balance
-      const balanceResponse = await fetch(`http://localhost:8080/api/users/${user.id}/wallet`, {
-        headers: getAuthHeaders()
-      });
-      const balanceData = await balanceResponse.json();
+      const balanceData = await apiService.getWalletBalance(user.id);
       setWalletBalance(balanceData || 0);
 
       // Fetch total fines paid
-      const finesResponse = await fetch(`http://localhost:8080/api/users/${user.id}/fines`, {
-        headers: getAuthHeaders()
-      });
-      const finesData = await finesResponse.json();
+      const finesData = await apiService.getTotalFinesPaid(user.id);
       setTotalFinesPaid(finesData || 0);
 
       setLoading(false);
@@ -33,7 +28,7 @@ const Wallet = () => {
       console.error('Error fetching wallet data:', error);
       setLoading(false);
     }
-  }, [user?.id, getAuthHeaders]);
+  }, [user?.id]);
 
   useEffect(() => {
     fetchWalletData();
@@ -47,23 +42,14 @@ const Wallet = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:8080/api/users/${user.id}/wallet/add`, {
-        method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({ amount: parseFloat(amount) })
-      });
-
-      if (response.ok) {
-        alert('Money added successfully!');
-        setAmount('');
-        setShowAddMoney(false);
-        fetchWalletData();
-      } else {
-        alert('Failed to add money');
-      }
+      await apiService.addToWallet(user.id, parseFloat(amount));
+      alert('Money added successfully!');
+      setAmount('');
+      setShowAddMoney(false);
+      fetchWalletData(); // Refresh wallet data
     } catch (error) {
       console.error('Error adding money:', error);
-      alert('Error adding money');
+      alert(`Error adding money: ${error.message || 'Unknown error'}`);
     }
   };
 
