@@ -140,6 +140,14 @@
   transform: translateY(-1px);
 }
 
+.admin-button:disabled,
+.admin-button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 .admin-table {
   width: 100%;
   border-collapse: collapse;
@@ -163,6 +171,12 @@
   padding: 1rem;
   border-bottom: 1px solid #e1e5e9;
   color: #4b5563;
+}
+
+.admin-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .admin-table tr:hover {

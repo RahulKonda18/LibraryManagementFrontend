@@ -129,9 +129,6 @@ const Wallet = () => {
           <div className="info-item">
             <strong>Borrowing Period:</strong> 14 days
           </div>
-          <div className="info-item">
-            <strong>Auto-Deduction:</strong> Fines are automatically deducted from wallet
-          </div>
         </div>
       </div>
     </div>
