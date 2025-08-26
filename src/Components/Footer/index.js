@@ -34,9 +34,6 @@ const Footer = () => {
         </div>
       </div>
       
-      <div className="footer-bottom">
-        <p>&copy; 2024 Library Management System. All rights reserved.</p>
-      </div>
     </footer>
   );
 };

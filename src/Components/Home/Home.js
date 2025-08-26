@@ -108,7 +108,7 @@ const Home = () => {
         onReturn={handleReturn}
       />
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
-        <button onClick={goToPrevPage} disabled={page <= 0} style={{ padding: '0.6rem 1.2rem', borderRadius: 8, border: '1px solid #ccd', background: page <= 0 ? '#eee' : '#667eea', color: page <= 0 ? '#888' : '#fff', cursor: page <= 0 ? 'not-allowed' : 'pointer' }}>Prev</button>
+        <button onClick={goToPrevPage} disabled={page <= 0} style={{ padding: '0.6rem 1.2rem', borderRadius: 0, border: '0px solid #ccd', background: page <= 0 ? '#eee' : '#333333', color: page <= 0 ? '#888' : '#fff', cursor: page <= 0 ? 'not-allowed' : 'pointer' }}>Prev</button>
         <div style={{ color: '#555', flex: 1, textAlign: 'center' }}>
           Page {totalPages === 0 ? 0 : page + 1} of {totalPages}
           {totalElements > 0 && (
@@ -118,7 +118,7 @@ const Home = () => {
             </span>
           )}
         </div>
-        <button onClick={goToNextPage} disabled={totalPages === 0 || page >= totalPages - 1} style={{ padding: '0.6rem 1.2rem', borderRadius: 8, border: '1px solid #ccd', background: (totalPages === 0 || page >= totalPages - 1) ? '#eee' : '#667eea', color: (totalPages === 0 || page >= totalPages - 1) ? '#888' : '#fff', cursor: (totalPages === 0 || page >= totalPages - 1) ? 'not-allowed' : 'pointer' }}>Next</button>
+        <button onClick={goToNextPage} disabled={totalPages === 0 || page >= totalPages - 1} style={{ padding: '0.6rem 1.2rem', borderRadius: 0, border: '0px solid #ccd', background: (totalPages === 0 || page >= totalPages - 1) ? '#eee' : '#333333', color: (totalPages === 0 || page >= totalPages - 1) ? '#888' : '#fff', cursor: (totalPages === 0 || page >= totalPages - 1) ? 'not-allowed' : 'pointer' }}>Next</button>
       </div>
     </main>
   );

@@ -15,7 +15,7 @@
 
 .book-card {
   background: #111111;
-  border-radius: 12px;
+  border-radius: 0px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   transition: all 0.3s ease;
@@ -76,7 +76,7 @@
   background: linear-gradient(135deg, #333333 0%, #555555 100%);
   color: #ffffff;
   padding: 0.3rem 0.8rem;
-  border-radius: 15px;
+  border-radius: 0px;
   font-size: 0.8rem;
   font-weight: 500;
   text-transform: capitalize;
@@ -116,7 +116,7 @@
 
 .book-btn {
   padding: 0.5rem 1rem;
-  border-radius: 8px;
+  border-radius: 0px;
   border: none;
   cursor: pointer;
   font-weight: 600;
