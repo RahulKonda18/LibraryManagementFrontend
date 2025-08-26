@@ -2,17 +2,19 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
+  background-color: #000000;
+  color: #ffffff;
 }
 
 .subscriber-header {
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid #e1e5e9;
+  border-bottom: 2px solid #333333;
 }
 
 .subscriber-header h2 {
   margin: 0;
-  color: #333;
+  color: #ffffff;
   font-size: 2rem;
 }
 
@@ -20,7 +22,7 @@
   text-align: center;
   padding: 3rem;
   font-size: 1.2rem;
-  color: #666;
+  color: #cccccc;
 }
 
 .wallet-summary {
@@ -31,17 +33,17 @@
 }
 
 .wallet-card {
-  background: white;
+  background: #111111;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   text-align: center;
-  border: 1px solid #e1e5e9;
+  border: 1px solid #333333;
 }
 
 .wallet-card h3 {
   margin: 0 0 1rem 0;
-  color: #374151;
+  color: #ffffff;
   font-size: 1.2rem;
   font-weight: 500;
 }
@@ -49,35 +51,35 @@
 .balance-amount {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #10b981;
+  color: #4ade80;
   margin-bottom: 1.5rem;
 }
 
 .fines-amount {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #f59e0b;
+  color: #fbbf24;
   margin-bottom: 1rem;
 }
 
 .wallet-info {
-  color: #6b7280;
+  color: #cccccc;
   font-size: 0.9rem;
   margin: 0;
 }
 
 .add-money-form {
-  background: white;
+  background: #111111;
   border-radius: 12px;
   padding: 2rem;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e1e5e9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  border: 1px solid #333333;
 }
 
 .add-money-form h3 {
   margin: 0 0 1.5rem 0;
-  color: #333;
+  color: #ffffff;
   font-size: 1.5rem;
 }
 
@@ -95,22 +97,24 @@
 
 .add-money-form label {
   font-weight: 500;
-  color: #333;
+  color: #ffffff;
   font-size: 0.9rem;
 }
 
 .add-money-form input {
   padding: 0.75rem;
-  border: 2px solid #e1e5e9;
+  border: 2px solid #333333;
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.3s ease;
+  background: #222222;
+  color: #ffffff;
 }
 
 .add-money-form input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #555555;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
 }
 
 .form-actions {
@@ -120,16 +124,16 @@
 }
 
 .wallet-info-section {
-  background: white;
+  background: #111111;
   border-radius: 12px;
   padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e1e5e9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  border: 1px solid #333333;
 }
 
 .wallet-info-section h3 {
   margin: 0 0 1.5rem 0;
-  color: #333;
+  color: #ffffff;
   font-size: 1.3rem;
 }
 
@@ -141,10 +145,10 @@
 
 .info-item {
   padding: 1rem;
-  background: #f8fafc;
+  background: #222222;
   border-radius: 8px;
-  border: 1px solid #e1e5e9;
-  color: #374151;
+  border: 1px solid #333333;
+  color: #ffffff;
 }
 
 .borrow-summary {
@@ -155,17 +159,17 @@
 }
 
 .summary-card {
-  background: white;
+  background: #111111;
   padding: 1.5rem;
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   text-align: center;
-  border: 1px solid #e1e5e9;
+  border: 1px solid #333333;
 }
 
 .summary-card h3 {
   margin: 0 0 1rem 0;
-  color: #374151;
+  color: #ffffff;
   font-size: 1rem;
   font-weight: 500;
 }
@@ -173,7 +177,7 @@
 .summary-card .count {
   font-size: 2rem;
   font-weight: 700;
-  color: #667eea;
+  color: #60a5fa;
 }
 
 .borrow-sections {
@@ -183,46 +187,47 @@
 }
 
 .borrow-section {
-  background: white;
+  background: #111111;
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e1e5e9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  border: 1px solid #333333;
 }
 
 .borrow-section h3 {
   margin: 0 0 1.5rem 0;
-  color: #333;
+  color: #ffffff;
   font-size: 1.3rem;
 }
 
 .subscriber-table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
+  background: #111111;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   margin-bottom: 1rem;
+  border: 1px solid #333333;
 }
 
 .subscriber-table th {
-  background: #f8fafc;
+  background: #222222;
   padding: 1rem;
   text-align: left;
   font-weight: 600;
-  color: #374151;
-  border-bottom: 2px solid #e1e5e9;
+  color: #ffffff;
+  border-bottom: 2px solid #333333;
 }
 
 .subscriber-table td {
   padding: 1rem;
-  border-bottom: 1px solid #e1e5e9;
-  color: #4b5563;
+  border-bottom: 1px solid #333333;
+  color: #cccccc;
 }
 
 .subscriber-table tr:hover {
-  background: #f9fafb;
+  background: #222222;
 }
 
 .subscriber-table tr:last-child td {
@@ -237,18 +242,18 @@
 }
 
 .status-badge.returned {
-  background: #d1fae5;
-  color: #065f46;
+  background: #1a3d1a;
+  color: #4ade80;
 }
 
 .status-badge.overdue {
-  background: #fee2e2;
-  color: #991b1b;
+  background: #3d1a1a;
+  color: #f87171;
 }
 
 .status-badge.active {
-  background: #dbeafe;
-  color: #1e40af;
+  background: #1a2a3d;
+  color: #60a5fa;
 }
 
 .subscriber-button {
@@ -262,23 +267,24 @@
 }
 
 .subscriber-button.primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, #333333 0%, #555555 100%);
+  color: #ffffff;
 }
 
 .subscriber-button.primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, #444444 0%, #666666 100%);
 }
 
 .subscriber-button.secondary {
-  background: #f3f4f6;
-  color: #374151;
-  border: 1px solid #d1d5db;
+  background: #333333;
+  color: #ffffff;
+  border: 1px solid #555555;
 }
 
 .subscriber-button.secondary:hover {
-  background: #e5e7eb;
+  background: #444444;
 }
 
 .subscriber-button.small {
@@ -289,7 +295,7 @@
 .no-data {
   text-align: center;
   padding: 3rem;
-  color: #6b7280;
+  color: #aaaaaa;
   font-style: italic;
 }
 

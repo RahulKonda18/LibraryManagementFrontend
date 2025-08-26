@@ -2,12 +2,14 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background-color: #000000;
+  color: #ffffff;
 }
 
 .main-content {
   flex: 1;
-  background: white;
+  background-color: #000000;
+  color: #ffffff;
 }
 
 /* Global styles */
@@ -22,6 +24,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #000000;
+  color: #ffffff;
 }
 
 code {

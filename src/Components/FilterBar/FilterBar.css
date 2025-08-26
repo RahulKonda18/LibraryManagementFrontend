@@ -1,7 +1,7 @@
 .filter-bar {
-  background: #f8f9fa;
+  background: #111111;
   padding: 2rem 0;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid #333333;
 }
 
 .filter-container {
@@ -12,7 +12,7 @@
 
 .filter-container h3 {
   margin: 0 0 1rem 0;
-  color: #495057;
+  color: #ffffff;
   font-size: 1.2rem;
   font-weight: 600;
 }
@@ -25,9 +25,9 @@
 
 .filter-btn {
   padding: 0.5rem 1.5rem;
-  border: 2px solid #dee2e6;
-  background: white;
-  color: #495057;
+  border: 2px solid #333333;
+  background: #222222;
+  color: #cccccc;
   border-radius: 25px;
   cursor: pointer;
   font-weight: 500;
@@ -36,17 +36,18 @@
 }
 
 .filter-btn:hover {
-  border-color: #667eea;
-  color: #667eea;
+  border-color: #555555;
+  color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  background: #333333;
 }
 
 .filter-btn.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-color: #667eea;
-  color: white;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, #333333 0%, #555555 100%);
+  border-color: #666666;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 @media (max-width: 768px) {
